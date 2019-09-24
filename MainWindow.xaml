@@ -25,6 +25,14 @@
             <Setter Property="IsSnapToTickEnabled" Value="True"/>
             <Setter Property="Foreground" Value="Green"/>
         </Style>
+        <Style x:Key="ZoomControl" TargetType="Slider">
+            <Setter Property="Orientation" Value="Vertical"/>
+            <Setter Property="Minimum" Value="0"/>
+            <Setter Property="Maximum" Value="1"/>
+            <Setter Property="TickPlacement" Value="BottomRight"/>
+            <Setter Property="TickFrequency" Value="0.1"/>
+            <Setter Property="Value" Value="1"/>
+        </Style>
         <Style x:Key="IconToggle" TargetType="Image">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=Paused}" Value="False">
@@ -47,6 +55,36 @@
                     <Image Style="{StaticResource IconToggle}"/>
                 </Button>
             </StackPanel>
+            <Slider x:Name="Zoom" DockPanel.Dock="Left" Style="{StaticResource ZoomControl}"/>
+            <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Center">
+                <UniformGrid.LayoutTransform>
+                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=Zoom, Path=Value}" ScaleY="{Binding ElementName=Zoom, Path=Value}"/>
+                </UniformGrid.LayoutTransform>
+                <!--uniformgrid is promising, trying to mimic docs-->
+                <!--zoom reference-->
+                <!--https://blogs.msdn.microsoft.com/ivo_manolov/2007/10/05/ui-scaling-ui-zooming-with-wpf/-->
+                <Border Background="AliceBlue" Grid.Row="1" Grid.Column="1">
+                    <TextBlock Text="1"/>
+                </Border>
+                <Border Background="Cornsilk">
+                    <TextBlock Text="2"/>
+                </Border>
+                <Border Background="DarkSalmon">
+                    <TextBlock Text="3"/>
+                </Border>
+                <Border Background="Gainsboro">
+                    <TextBlock Text="4"/>
+                </Border>
+                <Border Background="LightBlue">
+                    <TextBlock Text="5"/>
+                </Border>
+                <Border Background="MediumAquamarine">
+                    <TextBlock Text="6"/>
+                </Border>
+                <Border Background="MistyRose">
+                    <TextBlock Text="7"/>
+                </Border>
+            </UniformGrid>
         </StackPanel>
     </DockPanel>
 </Window>
