@@ -25,9 +25,24 @@ namespace CellularAutomaton
         {
             get; set;
         } = true;
+
         public MainWindow()
         {
+            DataContext = this;
             InitializeComponent();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate {};
+
+        protected void OnPropertyChanged(string property)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
+
+        private void Toggle(object sender, RoutedEventArgs e)
+        {
+            Paused = !Paused;
+            OnPropertyChanged("Paused");
         }
     }
 }
