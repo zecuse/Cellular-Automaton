@@ -1,0 +1,39 @@
+﻿<Window x:Class="CellularAutomaton.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CellularAutomaton"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Window.Resources>
+        <Style x:Key="Base" TargetType="Control">
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style x:Key="SliderBase" TargetType="Slider" BasedOn="{StaticResource Base}">
+            <Setter Property="Minimum" Value="1"/>
+            <Setter Property="Maximum" Value="5"/>
+            <Setter Property="Value" Value="1"/>
+            <Setter Property="SmallChange" Value="1"/>
+            <Setter Property="LargeChange" Value="1"/>
+            <Setter Property="TickPlacement" Value="BottomRight"/>
+            <Setter Property="TickFrequency" Value="1"/>
+            <Setter Property="IsSnapToTickEnabled" Value="True"/>
+            <Setter Property="Foreground" Value="Green"/>
+        </Style>
+    </Window.Resources>
+    <!--possibly look into this for cooridinate grid-->
+    <!--https://stackoverflow.com/questions/276808/how-to-populate-a-wpf-grid-based-on-a-2-dimensional-array-->
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top">
+            <Slider x:Name="StepRate" Style="{StaticResource SliderBase}"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Step"/>
+                <Button>
+                    <Image Source="{Binding }"
+                </Button>
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</Window>
