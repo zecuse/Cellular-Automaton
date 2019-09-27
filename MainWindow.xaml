@@ -14,7 +14,10 @@
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="5"/>
         </Style>
-        <Style x:Key="SliderBase" TargetType="Slider" BasedOn="{StaticResource Base}">
+        <Style x:Key="BorderBase" TargetType="Border">
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style x:Key="Steps" TargetType="Slider" BasedOn="{StaticResource Base}">
             <Setter Property="Minimum" Value="1"/>
             <Setter Property="Maximum" Value="5"/>
             <Setter Property="Value" Value="1"/>
@@ -25,7 +28,7 @@
             <Setter Property="IsSnapToTickEnabled" Value="True"/>
             <Setter Property="Foreground" Value="Green"/>
         </Style>
-        <Style x:Key="ZoomControl" TargetType="Slider">
+        <Style x:Key="ZoomControl" TargetType="Slider" BasedOn="{StaticResource Base}">
             <Setter Property="Orientation" Value="Vertical"/>
             <Setter Property="Minimum" Value="0"/>
             <Setter Property="Maximum" Value="1"/>
@@ -51,45 +54,56 @@
     </Window.Resources>
     <!--possibly look into this for cooridinate grid-->
     <!--https://stackoverflow.com/questions/276808/how-to-populate-a-wpf-grid-based-on-a-2-dimensional-array-->
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top">
-            <Slider x:Name="StepRate" Style="{StaticResource SliderBase}"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Slider Grid.Column="0" x:Name="Zoom" Style="{StaticResource ZoomControl}"/>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Slider Grid.Row="0" x:Name="StepRate" Style="{StaticResource Steps}"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button Style="{StaticResource Base}" Content="Step"/>
                 <Button Style="{StaticResource Player}">
                     <Image Style="{StaticResource IconToggle}"/>
                 </Button>
             </StackPanel>
-            <Slider x:Name="Zoom" DockPanel.Dock="Left" Style="{StaticResource ZoomControl}"/>
-            <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <UniformGrid.LayoutTransform>
-                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=Zoom, Path=Value}" ScaleY="{Binding ElementName=Zoom, Path=Value}"/>
-                </UniformGrid.LayoutTransform>
-                <!--uniformgrid is promising, trying to mimic docs-->
-                <!--zoom reference-->
-                <!--https://blogs.msdn.microsoft.com/ivo_manolov/2007/10/05/ui-scaling-ui-zooming-with-wpf/-->
-                <Border Background="AliceBlue" Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="1"/>
-                </Border>
-                <Border Background="Cornsilk">
-                    <TextBlock Text="2"/>
-                </Border>
-                <Border Background="DarkSalmon">
-                    <TextBlock Text="3"/>
-                </Border>
-                <Border Background="Gainsboro">
-                    <TextBlock Text="4"/>
-                </Border>
-                <Border Background="LightBlue">
-                    <TextBlock Text="5"/>
-                </Border>
-                <Border Background="MediumAquamarine">
-                    <TextBlock Text="6"/>
-                </Border>
-                <Border Background="MistyRose">
-                    <TextBlock Text="7"/>
-                </Border>
-            </UniformGrid>
-        </StackPanel>
-    </DockPanel>
+            <Border Grid.Row="2" Style="{StaticResource BorderBase}" BorderBrush="Black" BorderThickness="0.5">
+                <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <UniformGrid.LayoutTransform>
+                        <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=Zoom, Path=Value}" ScaleY="{Binding ElementName=Zoom, Path=Value}"/>
+                    </UniformGrid.LayoutTransform>
+                    <!--uniformgrid is promising, trying to mimic docs-->
+                    <!--zoom reference-->
+                    <!--https://blogs.msdn.microsoft.com/ivo_manolov/2007/10/05/ui-scaling-ui-zooming-with-wpf/-->
+                    <Border Background="AliceBlue">
+                        <TextBlock Text="1"/>
+                    </Border>
+                    <Border Background="Cornsilk">
+                        <TextBlock Text="2"/>
+                    </Border>
+                    <Border Background="DarkSalmon">
+                        <TextBlock Text="3"/>
+                    </Border>
+                    <Border Background="Gainsboro">
+                        <TextBlock Text="4"/>
+                    </Border>
+                    <Border Background="LightBlue">
+                        <TextBlock Text="5"/>
+                    </Border>
+                    <Border Background="MediumAquamarine">
+                        <TextBlock Text="6"/>
+                    </Border>
+                    <Border Background="MistyRose">
+                        <TextBlock Text="7"/>
+                    </Border>
+                </UniformGrid>
+            </Border>
+        </Grid>
+    </Grid>
 </Window>
