@@ -42,6 +42,12 @@
                     <Setter Property="Source" Value="{StaticResource PlayIcon}"/>
                 </DataTrigger>
             </Style.Triggers>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="20"/>
+        </Style>
+        <Style x:Key="Border" TargetType="Border">
+            <Setter Property="Width" Value="100"/>
+            <Setter Property="Height" Value="100"/>
         </Style>
     </Window.Resources>
     <!--possibly look into this for cooridinate grid-->
@@ -51,40 +57,54 @@
             <Slider x:Name="StepRate" Style="{StaticResource SliderBase}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Step"/>
-                <Button>
+                <Button Click="Toggle">
                     <Image Style="{StaticResource IconToggle}"/>
                 </Button>
             </StackPanel>
-            <Slider x:Name="Zoom" DockPanel.Dock="Left" Style="{StaticResource ZoomControl}"/>
-            <UniformGrid HorizontalAlignment="Center" VerticalAlignment="Center">
-                <UniformGrid.LayoutTransform>
-                    <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=Zoom, Path=Value}" ScaleY="{Binding ElementName=Zoom, Path=Value}"/>
-                </UniformGrid.LayoutTransform>
-                <!--uniformgrid is promising, trying to mimic docs-->
-                <!--zoom reference-->
-                <!--https://blogs.msdn.microsoft.com/ivo_manolov/2007/10/05/ui-scaling-ui-zooming-with-wpf/-->
-                <Border Background="AliceBlue" Grid.Row="1" Grid.Column="1">
-                    <TextBlock Text="1"/>
-                </Border>
-                <Border Background="Cornsilk">
-                    <TextBlock Text="2"/>
-                </Border>
-                <Border Background="DarkSalmon">
-                    <TextBlock Text="3"/>
-                </Border>
-                <Border Background="Gainsboro">
-                    <TextBlock Text="4"/>
-                </Border>
-                <Border Background="LightBlue">
-                    <TextBlock Text="5"/>
-                </Border>
-                <Border Background="MediumAquamarine">
-                    <TextBlock Text="6"/>
-                </Border>
-                <Border Background="MistyRose">
-                    <TextBlock Text="7"/>
-                </Border>
-            </UniformGrid>
         </StackPanel>
+        <Slider x:Name="Zoom" DockPanel.Dock="Left" Style="{StaticResource ZoomControl}"/>
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="10000" Height="10000">
+            <Grid.LayoutTransform>
+                <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=Zoom, Path=Value}" ScaleY="{Binding ElementName=Zoom, Path=Value}"/>
+            </Grid.LayoutTransform>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <!--uniformgrid is promising, trying to mimic docs-->
+            <!--zoom reference-->
+            <!--https://blogs.msdn.microsoft.com/ivo_manolov/2007/10/05/ui-scaling-ui-zooming-with-wpf/-->
+            <Border Style="{StaticResource Border}" Background="AliceBlue" Grid.Row="1" Grid.Column="1">
+                <TextBlock Text="1"/>
+            </Border>
+            <Border Style="{StaticResource Border}" Background="Cornsilk" Grid.Row="1" Grid.Column="2">
+                <TextBlock Text="2"/>
+            </Border>
+            <Border Style="{StaticResource Border}" Background="DarkSalmon" Grid.Row="1" Grid.Column="3">
+                <TextBlock Text="3"/>
+            </Border>
+            <Border Style="{StaticResource Border}" Background="Gainsboro" Grid.Row="2" Grid.Column="1">
+                <TextBlock Text="4"/>
+            </Border>
+            <Border Style="{StaticResource Border}" Background="LightBlue" Grid.Row="2" Grid.Column="2">
+                <TextBlock Text="5"/>
+            </Border>
+            <Border Style="{StaticResource Border}" Background="MediumAquamarine" Grid.Row="2" Grid.Column="3">
+                <TextBlock Text="6"/>
+            </Border>
+            <Border Style="{StaticResource Border}" Background="MistyRose" Grid.Row="3" Grid.Column="1">
+                <TextBlock Text="7"/>
+            </Border>
+        </Grid>
     </DockPanel>
 </Window>
