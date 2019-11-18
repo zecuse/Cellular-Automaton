@@ -9,7 +9,7 @@
     <Window.Resources>
         <BitmapImage x:Key="PlayIcon" UriSource="Images/Play.png"/>
         <BitmapImage x:Key="PauseIcon" UriSource="Images/Pause.png"/>
-        
+
         <Style x:Key="Base" TargetType="Control">
             <Setter Property="Padding" Value="5"/>
             <Setter Property="Margin" Value="5"/>
@@ -25,14 +25,6 @@
             <Setter Property="IsSnapToTickEnabled" Value="True"/>
             <Setter Property="Foreground" Value="Green"/>
         </Style>
-        <Style x:Key="ZoomControl" TargetType="Slider">
-            <Setter Property="Orientation" Value="Vertical"/>
-            <Setter Property="Minimum" Value="0"/>
-            <Setter Property="Maximum" Value="1"/>
-            <Setter Property="TickPlacement" Value="BottomRight"/>
-            <Setter Property="TickFrequency" Value="0.1"/>
-            <Setter Property="Value" Value="1"/>
-        </Style>
         <Style x:Key="IconToggle" TargetType="Image">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Path=Paused}" Value="False">
@@ -42,12 +34,13 @@
                     <Setter Property="Source" Value="{StaticResource PlayIcon}"/>
                 </DataTrigger>
             </Style.Triggers>
-            <Setter Property="Height" Value="20"/>
             <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
         </Style>
-        <Style x:Key="Border" TargetType="Border">
-            <Setter Property="Width" Value="100"/>
-            <Setter Property="Height" Value="100"/>
+        <Style x:Key="Cell" TargetType="Button">
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="Height" Value="10"/>
+            <Setter Property="BorderThickness" Value="0"/>
         </Style>
     </Window.Resources>
     <!--possibly look into this for cooridinate grid-->
@@ -56,55 +49,12 @@
         <StackPanel DockPanel.Dock="Top">
             <Slider x:Name="StepRate" Style="{StaticResource SliderBase}"/>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Step"/>
-                <Button Click="Toggle">
+                <Button Content="Step" Click="Step"/>
+                <Button x:Name="PlayPause" Click="Toggle">
                     <Image Style="{StaticResource IconToggle}"/>
                 </Button>
             </StackPanel>
         </StackPanel>
-        <Slider x:Name="Zoom" DockPanel.Dock="Left" Style="{StaticResource ZoomControl}"/>
-        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="10000" Height="10000">
-            <Grid.LayoutTransform>
-                <ScaleTransform CenterX="0" CenterY="0" ScaleX="{Binding ElementName=Zoom, Path=Value}" ScaleY="{Binding ElementName=Zoom, Path=Value}"/>
-            </Grid.LayoutTransform>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <!--uniformgrid is promising, trying to mimic docs-->
-            <!--zoom reference-->
-            <!--https://blogs.msdn.microsoft.com/ivo_manolov/2007/10/05/ui-scaling-ui-zooming-with-wpf/-->
-            <Border Style="{StaticResource Border}" Background="AliceBlue" Grid.Row="1" Grid.Column="1">
-                <TextBlock Text="1"/>
-            </Border>
-            <Border Style="{StaticResource Border}" Background="Cornsilk" Grid.Row="1" Grid.Column="2">
-                <TextBlock Text="2"/>
-            </Border>
-            <Border Style="{StaticResource Border}" Background="DarkSalmon" Grid.Row="1" Grid.Column="3">
-                <TextBlock Text="3"/>
-            </Border>
-            <Border Style="{StaticResource Border}" Background="Gainsboro" Grid.Row="2" Grid.Column="1">
-                <TextBlock Text="4"/>
-            </Border>
-            <Border Style="{StaticResource Border}" Background="LightBlue" Grid.Row="2" Grid.Column="2">
-                <TextBlock Text="5"/>
-            </Border>
-            <Border Style="{StaticResource Border}" Background="MediumAquamarine" Grid.Row="2" Grid.Column="3">
-                <TextBlock Text="6"/>
-            </Border>
-            <Border Style="{StaticResource Border}" Background="MistyRose" Grid.Row="3" Grid.Column="1">
-                <TextBlock Text="7"/>
-            </Border>
-        </Grid>
+        <Grid x:Name="Grid" HorizontalAlignment="Center" VerticalAlignment="Center"/>
     </DockPanel>
 </Window>
