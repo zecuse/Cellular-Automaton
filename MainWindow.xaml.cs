@@ -2,18 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CellularAutomaton
 {
@@ -32,21 +24,20 @@ namespace CellularAutomaton
             get; set;
         }
 
-        public SolidColorBrush White
-        {
-            get; set;
-        } = new SolidColorBrush(Colors.White);
+        private const int width = 151;
 
-        public SolidColorBrush Black
-        {
-            get; set;
-        } = new SolidColorBrush(Colors.Black);
+        private const int height = 75;
 
-        private const int width = 11;//151;
-
-        private const int height = 11;//75;
+        private const int timeStep = 1000;
 
         private Queue<CellButton> active;
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate {};
+
+        protected void OnPropertyChanged(string property)
+        {
+            PropertyChanged(this, new PropertyChangedEventArgs(property));
+        }
 
         public MainWindow()
         {
@@ -56,13 +47,19 @@ namespace CellularAutomaton
             active = new Queue<CellButton>(width * height);
             GridCells[height / 2, width / 2].Enabled = true;
             active.Enqueue(GridCells[height / 2, width / 2]);
+            Update();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate {};
-
-        protected void OnPropertyChanged(string property)
+        public async void Update()
         {
-            PropertyChanged(this, new PropertyChangedEventArgs(property));
+            while (true)
+            {
+                if(!Paused)
+                {
+                    Step();
+                }
+                await Task.Delay(TimeSpan.FromMilliseconds(timeStep / StepRate.Value));
+            }
         }
 
         private void PopulateGrid()
@@ -71,48 +68,28 @@ namespace CellularAutomaton
 
             for (int ii = 0; ii < height; ++ii)
             {
-                RowDefinition row = new RowDefinition();
-                Grid.RowDefinitions.Add(row);
-                StackPanel panel = new StackPanel();
-                panel.Orientation = Orientation.Horizontal;
+                Grid.RowDefinitions.Add(new RowDefinition());
+                StackPanel panel = new StackPanel
+                {
+                    Orientation = Orientation.Horizontal
+                };
                 Grid.SetRow(panel, ii);
                 Grid.Children.Add(panel);
 
                 for (int jj = 0; jj < width; ++jj)
                 {
-                    CellButton cell = new CellButton
+                    CellButton cellButton = new CellButton
                     {
                         Name = "Cell",
                         Style = (Style)Resources["Cell"],
-                        Background = White,
+                        Background = new SolidColorBrush(Colors.White),
                         Row = ii,
                         Col = jj,
-                        Enabled = false,
-                        Neighbors = new List<CellButton>()
+                        Enabled = false
                     };
-                    cell.Click += Toggle;
-                    AddNeighbors(cell, ii, jj);
-                    panel.Children.Add(cell);
-                    GridCells[ii, jj] = cell;
-                }
-            }
-        }
-
-        private void AddNeighbors(CellButton cell, int row, int col)
-        {
-            for (int ii = row; ii >= row - 1; --ii)
-            {
-                for (int jj = col; jj >= col - 1; --jj)
-                {
-                    if (ii == row && jj == col)
-                    {
-                        continue;
-                    }
-                    if (ii >= 0 && jj >= 0) 
-                    {
-                        cell.Neighbors.Add(GridCells[ii, jj]);
-                        GridCells[ii, jj].Neighbors.Add(cell);
-                    }
+                    cellButton.Click += Toggle;
+                    panel.Children.Add(cellButton);
+                    GridCells[ii, jj] = cellButton;
                 }
             }
         }
@@ -129,13 +106,80 @@ namespace CellularAutomaton
             {
                 CellButton cell = button as CellButton;
                 GridCells[cell.Row, cell.Col].Enabled = !GridCells[cell.Row, cell.Col].Enabled;
-                button.Background = GridCells[cell.Row, cell.Col].Enabled ? Black : White;
+                active.Enqueue(cell);
             }
         }
 
         private void Step(object sender, RoutedEventArgs e)
         {
-            GridCells[0, 0].Enabled = !GridCells[0, 0].Enabled;
+            Step();
+        }
+
+        private void Step()
+        {
+            int count = active.Count;
+            while (count > 0)
+            {
+                CellButton cell = active.Dequeue();
+                var list = GetNeighbors(cell);
+                list.ForEach(c => c.Enabled = true);
+                list.ForEach(active.Enqueue);
+                --count;
+            }
+        }
+
+        private List<CellButton> GetNeighbors(CellButton cell)
+        {
+            List<CellButton> neighbors = new List<CellButton>();
+
+            for (int ii = cell.Row - 1; ii <= cell.Row + 1; ++ii)
+            {
+                if (ii < 0 || ii >= height)
+                {
+                    continue;
+                }
+                for (int jj = cell.Col - 1; jj <= cell.Col + 1; ++jj)
+                {
+                    if (jj < 0 || jj >= width)
+                    {
+                        continue;
+                    }
+                    if (!GridCells[ii, jj].Enabled && ((ii == cell.Row && jj != cell.Col) || (ii != cell.Row && jj == cell.Col)))
+                    {
+                        CellButton next = GridCells[ii, jj];
+                        if (CheckNeighbors(cell, next))
+                        {
+                            neighbors.Add(next);
+                        }
+                    }
+                }
+            }
+
+            return neighbors;
+        }
+
+        private bool CheckNeighbors(CellButton prev, CellButton next)
+        {
+            for (int ii = next.Row - 1; ii <= next.Row + 1; ++ii)
+            {
+                if (ii < 0 || ii >= height)
+                {
+                    continue;
+                }
+                for (int jj = next.Col - 1; jj <= next.Col + 1; ++jj)
+                {
+                    if (jj < 0 || jj >= width || GridCells[ii, jj].Equals(prev) || (ii != next.Row && jj != next.Col))
+                    {
+                        continue;
+                    }
+                    if (GridCells[ii, jj].Enabled)
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

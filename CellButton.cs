@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace CellularAutomaton
@@ -44,11 +38,6 @@ namespace CellularAutomaton
         {
             get; set;
         } = new SolidColorBrush(Colors.Black);
-
-        public List<CellButton> Neighbors
-        {
-            get; set;
-        }
 
         private void Update()
         {
