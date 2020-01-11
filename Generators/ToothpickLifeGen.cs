@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace CellularAutomaton.Generators
 {
-    class ToothpickGen : Generator
+    class ToothpickLifeGen : Generator
     {
-        public ToothpickGen(int width, int height) : base(width, height)
+        public ToothpickLifeGen(int width, int height) : base(width, height)
         {
             rules = new ToothpickRules(GridCells);
         }
@@ -16,13 +16,19 @@ namespace CellularAutomaton.Generators
             while (count > 0)
             {
                 CellButton cell = active.Dequeue();
-                cell.Immortal = true;
-                GetNextGen(cell).ForEach(c =>
+                if(cell.Life == 12)
                 {
-                    c.Enabled = true;
-                    active.Enqueue(c);
-                });
-                cell.Update();
+                    GetNextGen(cell).ForEach(c =>
+                    {
+                        c.Enabled = true;
+                        active.Enqueue(c);
+                    });
+                }
+                cell.Update(12);
+                if(cell.Enabled)
+                {
+                    active.Enqueue(cell);
+                }
                 --count;
             }
         }
@@ -44,7 +50,7 @@ namespace CellularAutomaton.Generators
                         continue;
                     }
                     CellButton next = GridCells[ii, jj];
-                    if (rules.Pass(cell, next))
+                    if(rules.Pass(cell, next))
                     {
                         neighbors.Add(next);
                     }

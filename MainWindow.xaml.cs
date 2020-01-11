@@ -16,7 +16,7 @@ namespace CellularAutomaton
         public bool Paused
         {
             get; set;
-        } = true;
+        } = false;
 
         private Generator generate;
 
@@ -37,7 +37,7 @@ namespace CellularAutomaton
         {
             DataContext = this;
             InitializeComponent();
-            generate = new ToothpickGen(height, width);
+            generate = new ToothpickLifeGen(height, width);
             PopulateGrid();
             generate.Force(height / 2, width / 2);
             Update();
