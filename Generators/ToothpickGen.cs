@@ -16,9 +16,20 @@ namespace CellularAutomaton.Generators
             while (count > 0)
             {
                 CellButton cell = active.Dequeue();
-                var list = GetNextGen(cell);
-                list.ForEach(c => c.Enabled = true);
-                list.ForEach(active.Enqueue);
+                if(cell.Life == 12)
+                {
+                    var list = GetNextGen(cell);
+                    foreach (CellButton c in list)
+                    {
+                        c.Enabled = true;
+                        active.Enqueue(c);
+                    }
+                }
+                cell.Update(12);
+                if(cell.Enabled)
+                {
+                    active.Enqueue(cell);
+                }
                 --count;
             }
         }
@@ -29,13 +40,13 @@ namespace CellularAutomaton.Generators
 
             for (int ii = cell.Row - 1; ii <= cell.Row + 1; ++ii)
             {
-                if (ii < 0 || ii >= height)
+                if (ii < 0 || ii >= width)
                 {
                     continue;
                 }
                 for (int jj = cell.Col - 1; jj <= cell.Col + 1; ++jj)
                 {
-                    if (jj < 0 || jj >= width)
+                    if (jj < 0 || jj >= height)
                     {
                         continue;
                     }

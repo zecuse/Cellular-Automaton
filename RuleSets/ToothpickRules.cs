@@ -28,7 +28,7 @@ namespace CellularAutomaton.RuleSets
                 }
                 for (int jj = next.Col - 1; jj <= next.Col + 1; ++jj)
                 {
-                    if (jj < 0 || jj >= grid.GetLength(1) || grid[ii, jj].Equals(next) || (ii != next.Row && jj != next.Col))
+                    if (jj < 0 || jj >= grid.GetLength(1) || grid[ii, jj].Equals(cur) || grid[ii, jj].Equals(next) || (ii != next.Row && jj != next.Col))
                     {
                         continue;
                     }

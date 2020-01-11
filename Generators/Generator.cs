@@ -30,10 +30,13 @@ namespace CellularAutomaton.Generators
             active = new Queue<CellButton>(width * height);
         }
 
-        public void Toggle(int ii, int jj)
+        public void Force(int ii, int jj)
         {
-            GridCells[ii, jj].Enabled = true;
-            active.Enqueue(GridCells[ii, jj]);
+            if(!active.Contains(GridCells[ii, jj]))
+            {
+                GridCells[ii, jj].Enabled = true;
+                active.Enqueue(GridCells[ii, jj]);
+            }
         }
     }
 }

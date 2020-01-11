@@ -15,19 +15,15 @@ namespace CellularAutomaton
             get; set;
         }
 
-        private bool on;
         public bool Enabled
         {
-            get
-            {
-                return on;
-            }
-            set
-            {
-                on = value;
-                Update();
-            }
+            get; set;
         }
+
+        public int Life
+        {
+            get; set;
+        } = 0;
 
         public SolidColorBrush White
         {
@@ -39,9 +35,21 @@ namespace CellularAutomaton
             get; set;
         } = new SolidColorBrush(Colors.Black);
 
-        private void Update()
+        public void Update(int lifespan)
         {
-            Background = on ? Black : White;
+            --Life;
+            if(Life < 0)
+            {
+                Background = Black;
+                Life = lifespan;
+                return;
+            }
+            else if(Life == 0)
+            {
+                Background = White;
+                Enabled = false;
+                return;
+            }
         }
     }
 }
