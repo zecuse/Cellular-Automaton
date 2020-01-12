@@ -5,8 +5,22 @@ namespace CellularAutomaton.Generators
 {
     class ToothpickGen : Generator
     {
-        public ToothpickGen(int width, int height) : base(width, height)
+        public ToothpickGen(int height, int width) : base(height, width)
         {
+            GridCells = new Cell[height, width];
+            for (int ii = 0; ii < height; ++ii)
+            {
+                for (int jj = 0; jj < width; ++jj)
+                {
+                    GridCells[ii, jj] = new Cell
+                    {
+                        Name = "Cell",
+                        Row = ii,
+                        Col = jj,
+                        Enabled = false
+                    };
+                }
+            }
             rules = new ToothpickRules(GridCells);
         }
 
@@ -15,8 +29,7 @@ namespace CellularAutomaton.Generators
             int count = active.Count;
             while (count > 0)
             {
-                CellButton cell = active.Dequeue();
-                cell.Immortal = true;
+                Cell cell = active.Dequeue();
                 GetNextGen(cell).ForEach(c =>
                 {
                     c.Enabled = true;
@@ -27,23 +40,23 @@ namespace CellularAutomaton.Generators
             }
         }
 
-        public override List<CellButton> GetNextGen(CellButton cell)
+        public override List<Cell> GetNextGen(Cell cell)
         {
-            List<CellButton> neighbors = new List<CellButton>();
+            List<Cell> neighbors = new List<Cell>();
 
             for (int ii = cell.Row - 1; ii <= cell.Row + 1; ++ii)
             {
-                if (ii < 0 || ii >= width)
+                if (ii < 0 || ii >= height)
                 {
                     continue;
                 }
                 for (int jj = cell.Col - 1; jj <= cell.Col + 1; ++jj)
                 {
-                    if (jj < 0 || jj >= height)
+                    if (jj < 0 || jj >= width)
                     {
                         continue;
                     }
-                    CellButton next = GridCells[ii, jj];
+                    Cell next = GridCells[ii, jj];
                     if (rules.Pass(cell, next))
                     {
                         neighbors.Add(next);

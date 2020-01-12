@@ -5,21 +5,21 @@ using System.Windows.Media;
 
 namespace CellularAutomaton.Generators
 {
-    class ToothpickLifeGen : Generator
+    class ToothpickChromeGen : Generator
     {
-        private int lifespan = 12;
+        private int lifespan = 8;
 
-        public ToothpickLifeGen(int height, int width) : base(height, width)
+        public ToothpickChromeGen(int height, int width) : base(height, width)
         {
-            GridCells = new LivingCell[height, width];
+            GridCells = new ChromaticCell[height, width];
             for (int ii = 0; ii < height; ++ii)
             {
                 for (int jj = 0; jj < width; ++jj)
                 {
-                    GridCells[ii, jj] = new LivingCell
+                    GridCells[ii, jj] = new ChromaticCell
                     {
                         Name = "Cell",
-                        Background = new SolidColorBrush(Colors.White),
+                        Background = new SolidColorBrush(Colors.Black),
                         Row = ii,
                         Col = jj,
                         Enabled = false,
@@ -35,7 +35,7 @@ namespace CellularAutomaton.Generators
             int count = active.Count;
             while (count > 0)
             {
-                LivingCell cell = active.Dequeue() as LivingCell;
+                ChromaticCell cell = active.Dequeue() as ChromaticCell;
                 if (cell.Life == lifespan)
                 {
                     GetNextGen(cell).ForEach(c =>

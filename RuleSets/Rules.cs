@@ -4,20 +4,20 @@ namespace CellularAutomaton.RuleSets
 {
     class Rules
     {
-        protected CellButton[,] grid;
+        protected Cell[,] grid;
 
-        protected Func<CellButton, CellButton, bool>[] ruleset;
+        protected Func<Cell, Cell, bool>[] ruleset;
 
-        public Rules(CellButton[,] grid)
+        public Rules(Cell[,] grid)
         {
             this.grid = grid;
         }
 
-        public bool Pass(CellButton cur, CellButton next)
+        public bool Pass(Cell cur, Cell next)
         {
             foreach (var rule in ruleset)
             {
-                if(!rule(cur, next))
+                if (!rule(cur, next))
                 {
                     return false;
                 }

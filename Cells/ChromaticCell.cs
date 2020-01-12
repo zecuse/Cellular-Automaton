@@ -1,81 +1,26 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
-namespace CellularAutomaton
+namespace CellularAutomaton.Cells
 {
-    public class CellButton : Button
+    class ChromaticCell : LivingCell
     {
-        public int Row
-        {
-            get; set;
-        }
-
-        public int Col
-        {
-            get; set;
-        }
-
-        public int Life
-        {
-            get; set;
-        } = 0;
-
-        public bool Enabled
-        {
-            get; set;
-        } = false;
-
-        public bool Immortal
-        {
-            get; set;
-        } = false;
-
         private int max = 255 * 6;
         private int chromeCount = 0;
         private int increment = 64;
-        public bool Chromatic
-        {
-            get; set;
-        } = false;
 
-        public SolidColorBrush White
+        public override void Update(int lifespan = 0)
         {
-            get; set;
-        } = new SolidColorBrush(Colors.White);
+            base.Update(lifespan);
 
-        public SolidColorBrush Black
-        {
-            get; set;
-        } = new SolidColorBrush(Colors.Black);
-
-        public void Update(int lifespan = 0)
-        {
-            if(Immortal)
+            if (Life == lifespan)
+            {
+                Background = new SolidColorBrush(Color.FromRgb(Red(), Green(), Blue()));
+            }
+            else if (Life == 0)
             {
                 Background = Black;
-                return;
-            }
-            --Life;
-            if(Life < 0)
-            {
-                if(Chromatic)
-                {
-                    Background = new SolidColorBrush(Color.FromRgb(Red(), Green(), Blue()));
-                }
-                else
-                {
-                    Background = Black;
-                }
-                Life = lifespan;
-                return;
-            }
-            else if(Life == 0)
-            {
-                Background = Chromatic ? Black : White;
-                Enabled = false;
                 chromeCount += increment;
                 chromeCount %= max;
-                return;
             }
         }
 

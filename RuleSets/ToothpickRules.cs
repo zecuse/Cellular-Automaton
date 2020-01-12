@@ -4,21 +4,21 @@ namespace CellularAutomaton.RuleSets
 {
     class ToothpickRules : Rules
     {
-        public ToothpickRules(CellButton[,] grid) : base(grid)
+        public ToothpickRules(Cell[,] grid) : base(grid)
         {
-            ruleset = new Func<CellButton, CellButton, bool>[]
+            ruleset = new Func<Cell, Cell, bool>[]
             {
                 rule1,
                 rule2
             };
         }
 
-        private bool rule1(CellButton cur, CellButton next)
+        private bool rule1(Cell cur, Cell next)
         {
             return !next.Enabled && !(next.Row != cur.Row && next.Col != cur.Col) && !next.Equals(cur);
         }
 
-        private bool rule2(CellButton cur, CellButton next)
+        private bool rule2(Cell cur, Cell next)
         {
             for (int ii = next.Row - 1; ii <= next.Row + 1; ++ii)
             {

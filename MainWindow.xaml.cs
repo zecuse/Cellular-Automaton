@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace CellularAutomaton
 {
@@ -69,19 +68,9 @@ namespace CellularAutomaton
 
                 for (int jj = 0; jj < width; ++jj)
                 {
-                    CellButton cellButton = new CellButton
-                    {
-                        Name = "Cell",
-                        Style = (Style)Resources["Cell"],
-                        Background = new SolidColorBrush(Colors.Black),
-                        Row = ii,
-                        Col = jj,
-                        Enabled = false,
-                        Chromatic = true
-                    };
-                    cellButton.Click += Toggle;
-                    panel.Children.Add(cellButton);
-                    generate.GridCells[ii, jj] = cellButton;
+                    generate.GridCells[ii, jj].Style = (Style)Resources["Cell"];
+                    generate.GridCells[ii, jj].Click += Toggle;
+                    panel.Children.Add(generate.GridCells[ii, jj]);
                 }
             }
         }
@@ -96,7 +85,7 @@ namespace CellularAutomaton
             }
             else
             {
-                CellButton cell = button as CellButton;
+                Cell cell = button as Cell;
                 generate.Force(cell.Row, cell.Col);
             }
         }

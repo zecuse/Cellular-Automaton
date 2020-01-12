@@ -5,34 +5,33 @@ namespace CellularAutomaton.Generators
 {
     abstract class Generator
     {
-        public CellButton[,] GridCells
+        public Cell[,] GridCells
         {
             get; set;
         }
 
-        public Queue<CellButton> active;
+        public Queue<Cell> active;
 
         protected Rules rules;
 
+        protected int height;
+
         protected int width;
 
-        protected int height;
+        public Generator(int height, int width)
+        {
+            this.height = height;
+            this.width = width;
+            active = new Queue<Cell>(height * width);
+        }
 
         public abstract void Update();
 
-        public abstract List<CellButton> GetNextGen(CellButton cell);
-
-        public Generator(int width, int height)
-        {
-            this.width = width;
-            this.height = height;
-            GridCells = new CellButton[width, height];
-            active = new Queue<CellButton>(width * height);
-        }
+        public abstract List<Cell> GetNextGen(Cell cell);
 
         public void Force(int ii, int jj)
         {
-            if(!active.Contains(GridCells[ii, jj]))
+            if (!active.Contains(GridCells[ii, jj]))
             {
                 GridCells[ii, jj].Enabled = true;
                 active.Enqueue(GridCells[ii, jj]);

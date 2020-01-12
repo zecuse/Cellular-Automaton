@@ -55,7 +55,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Cells\ChromaticCell.cs" />
+    <Compile Include="Cells\LivingCell.cs" />
+    <Compile Include="Generators\ToothpickChromeGen.cs" />
     <Compile Include="Generators\ToothpickGen.cs" />
+    <Compile Include="Generators\ToothpickLifeGen.cs" />
     <Compile Include="RuleSets\Rules.cs" />
     <Compile Include="RuleSets\ToothpickRules.cs" />
     <Page Include="MainWindow.xaml">
@@ -66,9 +70,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CellButton.cs" />
+    <Compile Include="Cells\Cell.cs" />
     <Compile Include="Generators\Generator.cs" />
-    <Compile Include="Generators\ToothpickLifeGen.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
