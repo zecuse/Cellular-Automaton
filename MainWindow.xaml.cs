@@ -73,10 +73,11 @@ namespace CellularAutomaton
                     {
                         Name = "Cell",
                         Style = (Style)Resources["Cell"],
-                        Background = new SolidColorBrush(Colors.White),
+                        Background = new SolidColorBrush(Colors.Black),
                         Row = ii,
                         Col = jj,
-                        Enabled = false
+                        Enabled = false,
+                        Chromatic = true
                     };
                     cellButton.Click += Toggle;
                     panel.Children.Add(cellButton);
