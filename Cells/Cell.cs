@@ -20,19 +20,19 @@ namespace CellularAutomaton
             get; set;
         } = false;
 
-        public SolidColorBrush White
+        public static SolidColorBrush White
         {
             get; set;
         } = new SolidColorBrush(Colors.White);
 
-        public SolidColorBrush Black
+        public static SolidColorBrush Black
         {
             get; set;
         } = new SolidColorBrush(Colors.Black);
 
         public virtual void Update()
         {
-            Background = Black;
+            Background = Enabled ? Black : White;
         }
     }
 }

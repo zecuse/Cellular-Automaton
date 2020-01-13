@@ -22,6 +22,7 @@ namespace CellularAutomaton.Generators
                 }
             }
             rules = new ToothpickRules(GridCells);
+            Force(height / 2, width / 2);
         }
 
         public override void Update()

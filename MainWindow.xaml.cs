@@ -36,9 +36,8 @@ namespace CellularAutomaton
         {
             DataContext = this;
             InitializeComponent();
-            generate = new ToothpickLifeGen(height, width);
+            generate = new ElementaryCAGen(height, width, 30);
             PopulateGrid();
-            generate.Force(height / 2, width / 2);
             Update();
         }
 
