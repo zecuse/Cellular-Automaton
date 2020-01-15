@@ -36,7 +36,7 @@ namespace CellularAutomaton
         {
             DataContext = this;
             InitializeComponent();
-            generate = new ElementaryCAGen(height, width, 30);
+            generate = new ElementaryCAGen(height, width, 126);
             PopulateGrid();
             Update();
         }

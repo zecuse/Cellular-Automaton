@@ -1,19 +1,22 @@
-﻿using System.Collections;
-
-namespace CellularAutomaton.RuleSets
+﻿namespace CellularAutomaton.RuleSets
 {
     class ElementaryCARule : Rules
     {
-        private BitArray rule;
+        private bool[] bits;
 
         public ElementaryCARule(Cell[,] grid, int rule) : base(grid)
         {
-            this.rule = new BitArray(new byte[] { (byte)rule });
+            bits = new bool[8];
+            for (int ii = 0; ii < 8; ++ii)
+            {
+                bits[ii] = rule % 2 == 1;
+                rule /= 2;
+            }
         }
 
         public bool Rule(int bit)
         {
-            return rule[bit];
+            return bits[bit];
         }
     }
 }
