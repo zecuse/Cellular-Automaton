@@ -58,9 +58,9 @@
     <Compile Include="Cells\ChromaticCell.cs" />
     <Compile Include="Cells\LivingCell.cs" />
     <Compile Include="Generators\ElementaryCAGen.cs" />
-    <Compile Include="Generators\ToothpickChromeGen.cs" />
-    <Compile Include="Generators\ToothpickGen.cs" />
-    <Compile Include="Generators\ToothpickLifeGen.cs" />
+    <Compile Include="Generators\FractalChromeGen.cs" />
+    <Compile Include="Generators\FractalGen.cs" />
+    <Compile Include="Generators\FractalLifeGen.cs" />
     <Compile Include="RuleSets\ElementaryCARule.cs" />
     <Compile Include="RuleSets\Rules.cs" />
     <Compile Include="RuleSets\ToothpickRules.cs" />

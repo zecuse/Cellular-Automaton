@@ -1,29 +1,23 @@
-﻿using CellularAutomaton.Cells;
-using CellularAutomaton.RuleSets;
+﻿using CellularAutomaton.RuleSets;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace CellularAutomaton.Generators
 {
-    class ToothpickLifeGen : Generator
+    class FractalGen : Generator
     {
-        private int lifespan = 12;
-
-        public ToothpickLifeGen(int height, int width) : base(height, width)
+        public FractalGen(int height, int width) : base(height, width)
         {
-            GridCells = new LivingCell[height, width];
+            GridCells = new Cell[height, width];
             for (int ii = 0; ii < height; ++ii)
             {
                 for (int jj = 0; jj < width; ++jj)
                 {
-                    GridCells[ii, jj] = new LivingCell
+                    GridCells[ii, jj] = new Cell
                     {
                         Name = "Cell",
-                        Background = new SolidColorBrush(Colors.White),
                         Row = ii,
                         Col = jj,
-                        Enabled = false,
-                        Life = 0
+                        Enabled = false
                     };
                 }
             }
@@ -36,20 +30,13 @@ namespace CellularAutomaton.Generators
             int count = active.Count;
             while (count > 0)
             {
-                LivingCell cell = active.Dequeue() as LivingCell;
-                if (cell.Life == lifespan)
+                Cell cell = active.Dequeue();
+                GetNextGen(cell).ForEach(c =>
                 {
-                    GetNextGen(cell).ForEach(c =>
-                    {
-                        c.Enabled = true;
-                        active.Enqueue(c);
-                    });
-                }
-                cell.Update(lifespan);
-                if (cell.Enabled)
-                {
-                    active.Enqueue(cell);
-                }
+                    c.Enabled = true;
+                    active.Enqueue(c);
+                });
+                cell.Update();
                 --count;
             }
         }

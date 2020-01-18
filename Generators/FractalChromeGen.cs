@@ -5,11 +5,11 @@ using System.Windows.Media;
 
 namespace CellularAutomaton.Generators
 {
-    class ToothpickChromeGen : Generator
+    class FractalChromeGen : Generator
     {
         private int lifespan = 8;
 
-        public ToothpickChromeGen(int height, int width) : base(height, width)
+        public FractalChromeGen(int height, int width) : base(height, width)
         {
             GridCells = new ChromaticCell[height, width];
             for (int ii = 0; ii < height; ++ii)

@@ -1,23 +1,29 @@
-﻿using CellularAutomaton.RuleSets;
+﻿using CellularAutomaton.Cells;
+using CellularAutomaton.RuleSets;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace CellularAutomaton.Generators
 {
-    class ToothpickGen : Generator
+    class FractalLifeGen : Generator
     {
-        public ToothpickGen(int height, int width) : base(height, width)
+        private int lifespan = 12;
+
+        public FractalLifeGen(int height, int width) : base(height, width)
         {
-            GridCells = new Cell[height, width];
+            GridCells = new LivingCell[height, width];
             for (int ii = 0; ii < height; ++ii)
             {
                 for (int jj = 0; jj < width; ++jj)
                 {
-                    GridCells[ii, jj] = new Cell
+                    GridCells[ii, jj] = new LivingCell
                     {
                         Name = "Cell",
+                        Background = new SolidColorBrush(Colors.White),
                         Row = ii,
                         Col = jj,
-                        Enabled = false
+                        Enabled = false,
+                        Life = 0
                     };
                 }
             }
@@ -30,13 +36,20 @@ namespace CellularAutomaton.Generators
             int count = active.Count;
             while (count > 0)
             {
-                Cell cell = active.Dequeue();
-                GetNextGen(cell).ForEach(c =>
+                LivingCell cell = active.Dequeue() as LivingCell;
+                if (cell.Life == lifespan)
                 {
-                    c.Enabled = true;
-                    active.Enqueue(c);
-                });
-                cell.Update();
+                    GetNextGen(cell).ForEach(c =>
+                    {
+                        c.Enabled = true;
+                        active.Enqueue(c);
+                    });
+                }
+                cell.Update(lifespan);
+                if (cell.Enabled)
+                {
+                    active.Enqueue(cell);
+                }
                 --count;
             }
         }
