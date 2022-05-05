@@ -1,28 +1,42 @@
-﻿using CellularAutomaton.RuleSets;
+﻿using CellularAutomaton.Cells;
+using CellularAutomaton.RuleSets;
 using System.Collections.Generic;
 
 namespace CellularAutomaton.Generators
 {
     class FractalGen : Generator
     {
-        public FractalGen(int height, int width) : base(height, width)
+        public FractalGen() : base()
         {
-            GridCells = new Cell[height, width];
-            for (int ii = 0; ii < height; ++ii)
+            rules = new FractalRules(AllCells);
+            Start();
+        }
+
+        public override List<Cell> GetNextGen(Cell cur)
+        {
+            neighbors.Clear();
+            for (int ii = -1; ii <= 1; ++ii)
             {
-                for (int jj = 0; jj < width; ++jj)
+                for (int jj = -1; jj <= 1; ++jj)
                 {
-                    GridCells[ii, jj] = new Cell
+                    SquareCell next;
+                    if (AllCells.TryGetValue((cur.index.x + ii, cur.index.y + jj), out found))
                     {
-                        Name = "Cell",
-                        Row = ii,
-                        Col = jj,
-                        Enabled = false
-                    };
+                        next = found as SquareCell;
+                    }
+                    else
+                    {
+                        next = new SquareCell(cur.center.x + ii * Constants.SquareSize, cur.center.y + jj * Constants.SquareSize);
+                    }
+                    next.index = (cur.index.x + ii, cur.index.y + jj);
+                    if (rules.Pass(cur, next))
+                    {
+                        neighbors.Add(next);
+                    }
                 }
             }
-            rules = new ToothpickRules(GridCells);
-            Force(height / 2, width / 2);
+
+            return neighbors;
         }
 
         public override void Update()
@@ -31,41 +45,19 @@ namespace CellularAutomaton.Generators
             while (count > 0)
             {
                 Cell cell = active.Dequeue();
-                GetNextGen(cell).ForEach(c =>
-                {
-                    c.Enabled = true;
-                    active.Enqueue(c);
-                });
+                GetNextGen(cell).ForEach(c => Activate(c));
                 cell.Update();
                 --count;
             }
         }
 
-        public override List<Cell> GetNextGen(Cell cell)
+        protected override void Start()
         {
-            List<Cell> neighbors = new List<Cell>();
-
-            for (int ii = cell.Row - 1; ii <= cell.Row + 1; ++ii)
+            Activate(new SquareCell
             {
-                if (ii < 0 || ii >= height)
-                {
-                    continue;
-                }
-                for (int jj = cell.Col - 1; jj <= cell.Col + 1; ++jj)
-                {
-                    if (jj < 0 || jj >= width)
-                    {
-                        continue;
-                    }
-                    Cell next = GridCells[ii, jj];
-                    if (rules.Pass(cell, next))
-                    {
-                        neighbors.Add(next);
-                    }
-                }
-            }
-
-            return neighbors;
+                center = new Cell.Center(0, 0),
+                index = (0, 0)
+            });
         }
     }
 }

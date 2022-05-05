@@ -6,55 +6,10 @@
         xmlns:local="clr-namespace:CellularAutomaton"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Window.Resources>
-        <BitmapImage x:Key="PlayIcon" UriSource="Images/Play.png"/>
-        <BitmapImage x:Key="PauseIcon" UriSource="Images/Pause.png"/>
 
-        <Style x:Key="Base" TargetType="Control">
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-        <Style x:Key="SliderBase" TargetType="Slider" BasedOn="{StaticResource Base}">
-            <Setter Property="Minimum" Value="1"/>
-            <Setter Property="Maximum" Value="5"/>
-            <Setter Property="Value" Value="1"/>
-            <Setter Property="SmallChange" Value="1"/>
-            <Setter Property="LargeChange" Value="1"/>
-            <Setter Property="TickPlacement" Value="BottomRight"/>
-            <Setter Property="TickFrequency" Value="1"/>
-            <Setter Property="IsSnapToTickEnabled" Value="True"/>
-            <Setter Property="Foreground" Value="Green"/>
-        </Style>
-        <Style x:Key="IconToggle" TargetType="Image">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=Paused}" Value="False">
-                    <Setter Property="Source" Value="{StaticResource PauseIcon}"/>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Path=Paused}" Value="True">
-                    <Setter Property="Source" Value="{StaticResource PlayIcon}"/>
-                </DataTrigger>
-            </Style.Triggers>
-            <Setter Property="Width" Value="20"/>
-            <Setter Property="Height" Value="20"/>
-        </Style>
-        <Style x:Key="Cell" TargetType="Button">
-            <Setter Property="Width" Value="10"/>
-            <Setter Property="Height" Value="10"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
-    </Window.Resources>
-    <!--possibly look into this for cooridinate grid-->
-    <!--https://stackoverflow.com/questions/276808/how-to-populate-a-wpf-grid-based-on-a-2-dimensional-array-->
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top">
-            <Slider x:Name="StepRate" Style="{StaticResource SliderBase}"/>
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Step" Click="Step"/>
-                <Button x:Name="PlayPause" Click="Toggle">
-                    <Image Style="{StaticResource IconToggle}"/>
-                </Button>
-            </StackPanel>
-        </StackPanel>
-        <Grid x:Name="Grid" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </DockPanel>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Canvas x:Name="Canvas" SizeChanged="Redraw"/>
+    </Grid>
+
+
 </Window>

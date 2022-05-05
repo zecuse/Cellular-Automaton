@@ -1,38 +1,61 @@
-﻿using System.Windows.Controls;
+﻿using System;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
-namespace CellularAutomaton
+namespace CellularAutomaton.Cells
 {
-    public class Cell : Button
+    class Cell : IEquatable<Cell>
     {
-        public int Row
+        public struct Center
         {
-            get; set;
+            public double x;
+            public double y;
+
+            public Center(double x, double y)
+            {
+                this.x = x;
+                this.y = y;
+            }
         }
 
-        public int Col
-        {
-            get; set;
-        }
+        public Center center;
+
+        public (int x, int y) index;
+
+        public static SolidColorBrush Black = new SolidColorBrush(Colors.Black);
+
+        public static SolidColorBrush White = new SolidColorBrush(Colors.White);
+
+        public static SolidColorBrush Blue = new SolidColorBrush(Colors.Blue);
 
         public bool Enabled
         {
             get; set;
         } = false;
 
-        public static SolidColorBrush White
+        public bool Redraw
         {
             get; set;
-        } = new SolidColorBrush(Colors.White);
+        } = true;
 
-        public static SolidColorBrush Black
+        public override bool Equals(object obj)
         {
-            get; set;
-        } = new SolidColorBrush(Colors.Black);
+            return obj is Cell && Equals(obj as Cell);
+        }
+
+        public virtual Shape Draw()
+        {
+            return new Rectangle();
+        }
 
         public virtual void Update()
         {
-            Background = Enabled ? Black : White;
+            return;
+        }
+
+        public bool Equals(Cell other)
+        {
+            return index.x == other.index.x && index.y == other.index.y;
         }
     }
 }

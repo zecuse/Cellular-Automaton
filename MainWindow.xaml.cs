@@ -1,16 +1,17 @@
-﻿using CellularAutomaton.Generators;
+﻿using CellularAutomaton.Cells;
+using CellularAutomaton.Generators;
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shapes;
 
 namespace CellularAutomaton
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : INotifyPropertyChanged
+    public partial class MainWindow
     {
         public bool Paused
         {
@@ -19,25 +20,15 @@ namespace CellularAutomaton
 
         private Generator generate;
 
-        private const int width = 151;
+        private const int timeStep = 250;
 
-        private const int height = 75;
-
-        private const int timeStep = 100;
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        protected void OnPropertyChanged(string property)
-        {
-            PropertyChanged(this, new PropertyChangedEventArgs(property));
-        }
+        private double scale = 1.0;
 
         public MainWindow()
         {
             DataContext = this;
             InitializeComponent();
-            generate = new ElementaryCAGen(height, width, 126);
-            PopulateGrid();
+            generate = new FractalLifeGen();
             Update();
         }
 
@@ -47,51 +38,32 @@ namespace CellularAutomaton
             {
                 if (!Paused)
                 {
+                    Draw(generate.active);
                     generate.Update();
                 }
-                await Task.Delay(TimeSpan.FromMilliseconds(timeStep / StepRate.Value));
+                await Task.Delay(TimeSpan.FromMilliseconds(timeStep));
             }
         }
 
-        private void PopulateGrid()
+        private void Draw(IEnumerable<Cell> cells, bool redrawall = false)
         {
-            for (int ii = 0; ii < height; ++ii)
+            foreach (Cell c in cells)
             {
-                Grid.RowDefinitions.Add(new RowDefinition());
-                StackPanel panel = new StackPanel
+                if (redrawall || c.Redraw)
                 {
-                    Orientation = Orientation.Horizontal
-                };
-                Grid.SetRow(panel, ii);
-                Grid.Children.Add(panel);
-
-                for (int jj = 0; jj < width; ++jj)
-                {
-                    generate.GridCells[ii, jj].Style = (Style)Resources["Cell"];
-                    generate.GridCells[ii, jj].Click += Toggle;
-                    panel.Children.Add(generate.GridCells[ii, jj]);
+                    Shape shape = c.Draw();
+                    Canvas.SetLeft(shape, c.center.x + Canvas.ActualWidth / 2);
+                    Canvas.SetTop(shape, c.center.y + Canvas.ActualHeight / 2);
+                    Canvas.Children.Add(shape);
+                    c.Redraw = false;
                 }
             }
         }
 
-        private void Toggle(object sender, RoutedEventArgs e)
+        private void Redraw(object sender, System.Windows.SizeChangedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button.Name.Equals("PlayPause"))
-            {
-                Paused = !Paused;
-                OnPropertyChanged("Paused");
-            }
-            else
-            {
-                Cell cell = button as Cell;
-                generate.Force(cell.Row, cell.Col);
-            }
-        }
-
-        private void Step(object sender, RoutedEventArgs e)
-        {
-            generate.Update();
+            Canvas.Children.Clear();
+            Draw(generate.AllCells.Values, true);
         }
     }
 }

@@ -1,16 +1,22 @@
-﻿using System;
+﻿using CellularAutomaton.Cells;
+using CellularAutomaton.Generators;
+using System;
+using System.Collections.Generic;
 
 namespace CellularAutomaton.RuleSets
 {
-    class Rules
+    abstract class Rules
     {
-        protected Cell[,] grid;
+        protected Dictionary<(int x, int y), Cell> world;
 
         protected Func<Cell, Cell, bool>[] ruleset;
 
-        public Rules(Cell[,] grid)
+        protected Cell checker, found;
+
+        public Rules(Dictionary<(int x, int y), Cell> cells)
         {
-            this.grid = grid;
+            world = cells;
+            checker = new Cell();
         }
 
         public bool Pass(Cell cur, Cell next)

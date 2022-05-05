@@ -1,41 +1,52 @@
-﻿using CellularAutomaton.RuleSets;
+﻿using CellularAutomaton.Cells;
+using CellularAutomaton.RuleSets;
 using System.Collections.Generic;
 
 namespace CellularAutomaton.Generators
 {
     abstract class Generator
     {
-        public Cell[,] GridCells
+        public Dictionary<(int x, int y), Cell> AllCells
         {
             get; set;
         }
 
         public Queue<Cell> active;
 
+        protected List<Cell> neighbors;
+
         protected Rules rules;
 
-        protected int height;
+        protected Cell found;
 
-        protected int width;
+        private int len = 1000;
 
-        public Generator(int height, int width)
+        public Generator()
         {
-            this.height = height;
-            this.width = width;
-            active = new Queue<Cell>(height * width);
+            AllCells = new Dictionary<(int x, int y), Cell>();
+            active = new Queue<Cell>(len);
+            neighbors = new List<Cell>();
         }
+
+        public abstract List<Cell> GetNextGen(Cell cur);
 
         public abstract void Update();
 
-        public abstract List<Cell> GetNextGen(Cell cell);
+        protected abstract void Start();
 
-        public void Force(int ii, int jj)
+        protected virtual void Activate(Cell cell)
         {
-            if (!active.Contains(GridCells[ii, jj]))
+            if (!AllCells.TryGetValue(cell.index, out Cell found))
             {
-                GridCells[ii, jj].Enabled = true;
-                active.Enqueue(GridCells[ii, jj]);
+                AllCells.Add((cell.index.x, cell.index.y), cell);
             }
+            active.Enqueue(cell);
+            cell.Enabled = true;
+        }
+
+        protected virtual void Deactivate(Cell cell)
+        {
+            cell.Redraw = true;
         }
     }
 }

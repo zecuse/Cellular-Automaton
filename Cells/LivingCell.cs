@@ -1,6 +1,6 @@
 ﻿namespace CellularAutomaton.Cells
 {
-    class LivingCell : Cell
+    abstract class LivingCell : Cell
     {
         public int Life
         {
@@ -17,12 +17,10 @@
             --Life;
             if (Life < 0)
             {
-                Background = Black;
                 Life = lifespan;
             }
             else if (Life == 0)
             {
-                Background = White;
                 Enabled = false;
             }
         }

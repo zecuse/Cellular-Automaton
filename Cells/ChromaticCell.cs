@@ -2,8 +2,14 @@
 
 namespace CellularAutomaton.Cells
 {
-    class ChromaticCell : LivingCell
+    abstract class ChromaticCell : LivingCell
     {
+        public SolidColorBrush Chrome
+        {
+            get; set;
+        }
+
+        private static SolidColorBrush BLACK = new SolidColorBrush(Colors.Black);
         private int max = 255 * 6;
         private int chromeCount = 0;
         private int increment = 64;
@@ -14,11 +20,11 @@ namespace CellularAutomaton.Cells
 
             if (Life == lifespan)
             {
-                Background = new SolidColorBrush(Color.FromRgb(Red(), Green(), Blue()));
+                Chrome = new SolidColorBrush(Color.FromRgb(Red(), Green(), Blue()));
             }
             else if (Life == 0)
             {
-                Background = Black;
+                Chrome = BLACK;
                 chromeCount += increment;
                 chromeCount %= max;
             }

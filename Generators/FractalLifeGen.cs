@@ -1,77 +1,38 @@
 ﻿using CellularAutomaton.Cells;
 using CellularAutomaton.RuleSets;
 using System.Collections.Generic;
-using System.Windows.Media;
 
 namespace CellularAutomaton.Generators
 {
+    //This doesn't work exactly the way I imagine it should.
     class FractalLifeGen : Generator
     {
-        private int lifespan = 12;
+        private int lifespan = 6;
 
-        public FractalLifeGen(int height, int width) : base(height, width)
+        public FractalLifeGen() : base()
         {
-            GridCells = new LivingCell[height, width];
-            for (int ii = 0; ii < height; ++ii)
-            {
-                for (int jj = 0; jj < width; ++jj)
-                {
-                    GridCells[ii, jj] = new LivingCell
-                    {
-                        Name = "Cell",
-                        Background = new SolidColorBrush(Colors.White),
-                        Row = ii,
-                        Col = jj,
-                        Enabled = false,
-                        Life = 0
-                    };
-                }
-            }
-            rules = new ToothpickRules(GridCells);
-            Force(height / 2, width / 2);
+            rules = new FractalRules(AllCells);
+            Start();
         }
 
-        public override void Update()
+        public override List<Cell> GetNextGen(Cell cur)
         {
-            int count = active.Count;
-            while (count > 0)
+            neighbors.Clear();
+            for (int ii = -1; ii <= 1; ++ii)
             {
-                LivingCell cell = active.Dequeue() as LivingCell;
-                if (cell.Life == lifespan)
+                for (int jj = -1; jj <= 1; ++jj)
                 {
-                    GetNextGen(cell).ForEach(c =>
+                    SquareLivingCell next;
+                    if (AllCells.TryGetValue((cur.index.x + ii, cur.index.y + jj), out found))
                     {
-                        c.Enabled = true;
-                        active.Enqueue(c);
-                    });
-                }
-                cell.Update(lifespan);
-                if (cell.Enabled)
-                {
-                    active.Enqueue(cell);
-                }
-                --count;
-            }
-        }
-
-        public override List<Cell> GetNextGen(Cell cell)
-        {
-            List<Cell> neighbors = new List<Cell>();
-
-            for (int ii = cell.Row - 1; ii <= cell.Row + 1; ++ii)
-            {
-                if (ii < 0 || ii >= height)
-                {
-                    continue;
-                }
-                for (int jj = cell.Col - 1; jj <= cell.Col + 1; ++jj)
-                {
-                    if (jj < 0 || jj >= width)
-                    {
-                        continue;
+                        next = found as SquareLivingCell;
                     }
-                    Cell next = GridCells[ii, jj];
-                    if (rules.Pass(cell, next))
+                    else
+                    {
+                        next = new SquareLivingCell(cur.center.x + ii * Constants.SquareSize, cur.center.y + jj * Constants.SquareSize);
+                    }
+                    next.index = (cur.index.x + ii, cur.index.y + jj);
+                    if (rules.Pass(cur, next))
                     {
                         neighbors.Add(next);
                     }
@@ -79,6 +40,38 @@ namespace CellularAutomaton.Generators
             }
 
             return neighbors;
+        }
+
+        public override void Update()
+        {
+            int count = active.Count;
+            while (count > 0)
+            {
+                SquareLivingCell cell = active.Dequeue() as SquareLivingCell;
+                if (cell.Life == lifespan)
+                {
+                    GetNextGen(cell).ForEach(c => Activate(c));
+                }
+                cell.Update(lifespan);
+                if (cell.Enabled)
+                {
+                    active.Enqueue(cell);
+                }
+                else
+                {
+                    Deactivate(cell);
+                }
+                --count;
+            }
+        }
+
+        protected override void Start()
+        {
+            Activate(new SquareLivingCell
+            {
+                center = new Cell.Center(0, 0),
+                index = (0, 0)
+            });
         }
     }
 }

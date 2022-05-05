@@ -57,13 +57,16 @@
     </ApplicationDefinition>
     <Compile Include="Cells\ChromaticCell.cs" />
     <Compile Include="Cells\LivingCell.cs" />
+    <Compile Include="Cells\SquareCell.cs" />
+    <Compile Include="Cells\SquareLivingCell.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Generators\ElementaryCAGen.cs" />
     <Compile Include="Generators\FractalChromeGen.cs" />
     <Compile Include="Generators\FractalGen.cs" />
     <Compile Include="Generators\FractalLifeGen.cs" />
     <Compile Include="RuleSets\ElementaryCARule.cs" />
     <Compile Include="RuleSets\Rules.cs" />
-    <Compile Include="RuleSets\ToothpickRules.cs" />
+    <Compile Include="RuleSets\FractalRules.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
